@@ -4,10 +4,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.HttpRequestHandler;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,6 +12,13 @@ import java.util.List;
 @RestController
 public class BoardApiController {
     private final BoardRepository boardRepository;
+
+    @PostMapping("/api/boards")
+    public ApiUtil<?> write(@RequestBody BoardRequest.WriteDTO requestDTO) { // JSON으로 받을 수 있는 어노테이션
+        boardRepository.insert(requestDTO);
+
+        return new ApiUtil<>(null);
+    }
 
     @DeleteMapping("/api/boards/{id}")
     public ApiUtil<?> deleteById(@PathVariable Integer id, HttpServletResponse response) {

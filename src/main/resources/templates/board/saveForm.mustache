@@ -4,20 +4,41 @@
     <div class="card">
         <div class="card-header"><b>익명 글쓰기 화면입니다</b></div>
         <div class="card-body">
-            <form action="#">
+            <form>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Enter author" name="author">
+                    <input type="text" class="form-control" placeholder="Enter author" id="author">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Enter title" name="title">
+                    <input type="text" class="form-control" placeholder="Enter title" id="title">
                 </div>
                 <div class="mb-3">
-                    <textarea class="form-control" rows="5" name="content"></textarea>
+                    <textarea class="form-control" rows="5" id="content"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary form-control">글쓰기완료</button>
+                <button type="button" onclick="btnWrite()" class="btn btn-primary form-control">글쓰기완료</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function btnWrite() {
+        let board = {
+            title: $("#title").val(),
+            content: $("#content").val(),
+            author: $("#author").val()
+        };
+
+        $.ajax({
+            url: "/api/boards",
+            type: "post",
+            data: JSON.stringify(board),
+            contentType: "application/json; charset=utf-8"
+        }).done((res) => {
+            location.href = "/";
+        }).fail((res) => {
+            alert(res.responseJSON.msg);
+        });
+    }
+</script>
 
 {{> layout/footer}}

@@ -18,7 +18,7 @@ public class BoardRepositoryTest {
     private BoardRepository boardRepository;
 
     @Test
-    public void selectAll_test(){
+    public void selectAll_test() {
         // given
 
         // when
@@ -34,7 +34,7 @@ public class BoardRepositoryTest {
     }
 
     @Test
-    public void selectOne_test(){
+    public void selectOne_test() {
         // given
         int id = 1;
 
@@ -49,14 +49,15 @@ public class BoardRepositoryTest {
     }
 
     @Test
-    public void insert_test(){ // 테스트 메서드는 파라미터가 없다. 리턴도 없다.
+    public void insert_test() { // 테스트 메서드는 파라미터가 없다. 리턴도 없다.
         // given
-        String title = "제목10";
-        String content = "내용10";
-        String author = "이순신";
-        
+        BoardRequest.WriteDTO requestDTO = new BoardRequest.WriteDTO();
+        requestDTO.setTitle("제목10");
+        requestDTO.setContent("내용10");
+        requestDTO.setAuthor("이순신");
+
         // when
-        boardRepository.insert(title, content, author);
+        boardRepository.insert(requestDTO);
 
         // then -> 눈으로 확인 (쿼리)
     } // Rollback (자동)
