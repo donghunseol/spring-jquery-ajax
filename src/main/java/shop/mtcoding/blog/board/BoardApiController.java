@@ -1,9 +1,12 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.HttpRequestHandler;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -13,8 +16,19 @@ import java.util.List;
 public class BoardApiController {
     private final BoardRepository boardRepository;
 
+    @DeleteMapping("/api/boards/{id}")
+    public ApiUtil<?> deleteById(@PathVariable Integer id, HttpServletResponse response) {
+        Board board = boardRepository.selectOne(id);
+        if (board == null) {
+            response.setStatus(404); // 404 를 따로 넣어줘야지 제대로된 값이 들어간다.
+            return new ApiUtil<>(404, "해당 게시글을 찾을 수 없습니다");
+        }
+        boardRepository.deleteById(id);
+        return new ApiUtil<>(null);
+    }
+
     @GetMapping("/api/boards") // API라 복수형으로 기입한다.
-    public ApiUtil<List<Board>> findAll(HttpServletResponse response){
+    public ApiUtil<List<Board>> findAll(HttpServletResponse response) {
         // response.setStatus(401); // 상태 코드 설정하는 코드
         List<Board> boardList = boardRepository.selectAll();
         return new ApiUtil<>(boardList); // MessageConverter (이건 무엇이 될지 모르니깐 추상 클래스이다)
