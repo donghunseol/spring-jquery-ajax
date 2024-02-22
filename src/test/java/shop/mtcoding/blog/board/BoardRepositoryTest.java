@@ -61,4 +61,21 @@ public class BoardRepositoryTest {
 
         // then -> 눈으로 확인 (쿼리)
     } // Rollback (자동)
+
+    @Test
+    public void update_test() {
+        // given
+        Integer id = 2;
+        BoardRequest.WriteDTO requestDTO = new BoardRequest.WriteDTO();
+        requestDTO.setTitle("설동훈");
+        requestDTO.setContent("설동훈");
+        requestDTO.setAuthor("설동훈");
+
+        //when
+        boardRepository.updateById(requestDTO, id);
+        List<Board> boardList = boardRepository.selectAll();
+
+        // then
+        System.out.println(boardList);
+    }
 }

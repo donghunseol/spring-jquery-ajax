@@ -1,6 +1,8 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.PostUpdate;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.HttpRequestHandler;
@@ -13,10 +15,26 @@ import java.util.List;
 public class BoardApiController {
     private final BoardRepository boardRepository;
 
-    @PostMapping("/api/boards")
-    public ApiUtil<?> write(@RequestBody BoardRequest.WriteDTO requestDTO) { // JSON으로 받을 수 있는 어노테이션
-        boardRepository.insert(requestDTO);
+    @PutMapping("/api/boards/{id}")
+    public ApiUtil<?> update(@PathVariable Integer id, @RequestBody BoardRequest.WriteDTO requestDTO, HttpServletResponse response) {
+        Board board = boardRepository.selectOne(id);
 
+        if (board == null) {
+            response.setStatus(404);
+            return new ApiUtil<>(404, "해당 게시글을 찾을 수 없습니다.");
+        }
+        boardRepository.updateById(requestDTO, id);
+        return new ApiUtil<>(requestDTO);
+    }
+
+    @PostMapping("/api/boards/{id}")
+    public ApiUtil<?> write(@PathVariable Integer id, @RequestBody BoardRequest.WriteDTO requestDTO, HttpServletResponse response) { // JSON으로 받을 수 있는 어노테이션
+        Board board = boardRepository.selectOne(id);
+        if (board == null) {
+            response.setStatus(404);
+            return new ApiUtil<>(404, "해당 게시글을 찾을 수 없습니다");
+        }
+        boardRepository.updateById(requestDTO, id);
         return new ApiUtil<>(null);
     }
 
