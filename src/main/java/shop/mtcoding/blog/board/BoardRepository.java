@@ -14,7 +14,7 @@ public class BoardRepository {
     private final EntityManager em;
 
     public List<Board> selectAll(){
-        Query query = em.createNativeQuery("select * from board_tb", Board.class);
+        Query query = em.createNativeQuery("select * from board_tb order by id desc", Board.class);
         List<Board> boardList = query.getResultList(); // 못찾으면 빈 컬렉션을 준다 (크기=0)
         return boardList;
     }

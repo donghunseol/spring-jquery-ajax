@@ -12,90 +12,49 @@
             <th></th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <td>5</td>
-            <td>제목5</td>
-            <td>내용5</td>
-            <td>홍길동</td>
-            <td>
-                <div class="d-flex">
-                    <form action="#">
-                        <button class="btn btn-danger">삭제</button>
-                    </form>
-                    <form action="/board/1/updateForm" method="get">
-                        <button class="btn btn-warning">수정</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>제목4</td>
-            <td>내용4</td>
-            <td>홍길동</td>
-            <td>
-                <div class="d-flex">
-                    <form action="#">
-                        <button class="btn btn-danger">삭제</button>
-                    </form>
-                    <form action="/board/1/updateForm" method="get">
-                        <button class="btn btn-warning">수정</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>제목3</td>
-            <td>내용3</td>
-            <td>홍길동</td>
-            <td>
-                <div class="d-flex">
-                    <form action="#">
-                        <button class="btn btn-danger">삭제</button>
-                    </form>
-                    <form action="/board/1/updateForm" method="get">
-                        <button class="btn btn-warning">수정</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>제목2</td>
-            <td>내용2</td>
-            <td>홍길동</td>
-            <td>
-                <div class="d-flex">
-                    <form action="#">
-                        <button class="btn btn-danger">삭제</button>
-                    </form>
-                    <form action="/board/1/updateForm" method="get">
-                        <button class="btn btn-warning">수정</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>제목1</td>
-            <td>내용1</td>
-            <td>홍길동</td>
-            <td>
-                <div class="d-flex">
-                    <form action="#">
-                        <button class="btn btn-danger">삭제</button>
-                    </form>
-                    <form action="/board/1/updateForm" method="get">
-                        <button class="btn btn-warning">수정</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
+        <tbody id="board-box">
+
         </tbody>
     </table>
 
 </div>
+
+<script>
+    // 200 떨어지면 done 으로 200 이 안떨어지면 fail 로 간다.
+    $.ajax({
+        url: "/api/boards",
+        type: "get"
+    }).done((res) => {
+        console.log("통신 성공");
+        console.log(res);
+
+        let boardList = res.body;
+        boardList.forEach((board)=>{
+            $("#board-box").append(render(board));
+        });
+    }).fail((res) => {
+        // console.log("통신 실패");
+        // console.log(res);
+        alert(res.responseJSON.msg); // 창에 오류 메시지를 띄워줌
+        //location.href = "/loginForm";
+    });
+
+    function render(board) {
+        return `<tr id="board-${board.id}">
+            <td>${board.id}</td>
+            <td>${board.title}</td>
+            <td>${board.content}</td>
+            <td>${board.author}</td>
+            <td>
+                <div class="d-flex">
+                    <button onclick="del(${board.id})" class="btn btn-danger">삭제</button>
+                    <form action="/board/${board.id}/updateForm" method="get">
+                        <button class="btn btn-warning">수정</button>
+                    </form>
+                </div>
+            </td>
+        </tr>`;
+    }
+</script>
 
 {{> layout/footer}}
